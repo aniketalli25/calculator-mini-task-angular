@@ -1,12 +1,14 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  background-color: #f8f9fa;
+}
+
+
 .calculator-popup {
   width: 300px;
   margin: 0 auto;
-}
-body {
-  background-color: #f8f9fa;
 }
 
 .gallery-img {
