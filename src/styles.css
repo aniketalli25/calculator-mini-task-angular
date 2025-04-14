@@ -1,1 +1,93 @@
-/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.calculator-popup {
+  width: 300px;
+  margin: 0 auto;
+}
+body {
+  background-color: #f8f9fa;
+}
+
+.gallery-img {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.3s ease, border-color 0.3s;
+}
+
+.gallery-img:hover {
+  transform: scale(1.05);
+  border-color: #007bff;
+}
+
+.caption {
+  position: absolute;
+  min-width: 100px;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px dashed #333;
+  border-radius: 4px;
+  color: #000;
+  font-size: 16px;
+  cursor: move;
+  z-index: 10;
+  user-select: none;
+}
+
+.custom-modal {
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1055;
+}
+
+.modal-backdrop {
+  z-index: 1050 !important;
+}
+
+
+.calculator-display {
+  text-align: center;
+}
+
+.calculator-display input {
+  width: 100%;
+  height: 40px;
+  font-size: 24px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+.buttons button {
+  width: 60px;
+  height: 60px;
+  font-size: 20px;
+  margin: 10px;
+}
+
+.gallery-popup .gallery {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.gallery-item {
+  position: relative;
+  display: inline-block;
+}
+
+.caption {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px;
+  cursor: move;
+}
+
+button {
+  padding: 10px;
+  font-size: 16px;
+}
+.modal.show.d-block {
+  background: rgba(0, 0, 0, 0.5);
+}
