@@ -1,27 +1,57 @@
 <div class="container-fluid">
-  <div class="container mt-4">
-    <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#calculatorModal">
+  <div class="container mt-5 pt-5">
+    <button class="btn btn-primary me-2 " data-bs-toggle="modal" data-bs-target="#calculatorModal">
       Open Calculator
     </button>
+
     <button class="btn btn-success" (click)="openGallery()">
       Open Gallery
     </button>
   </div>
 
   <!-- Calculator Modal -->
-  <div class="modal fade" id="calculatorModal" tabindex="-1" (shown.bs.modal)="onModalShown()">
+  <div class="modal fade" id="calculatorModal" tabindex="-1">
     <div class="modal-dialog">
-      <div class="modal-content p-3">
-        <h5 class="modal-title">Calculator</h5>
-        <input type="text" class="form-control mb-2" [(ngModel)]="display" readonly />
-        <div class="d-flex flex-wrap gap-2">
-          <button class="btn btn-outline-secondary" *ngFor="let btn of buttons" (click)="onCalcClick(btn)">
-            {{ btn }}
-          </button>
+      <div class="modal-content text-center p-3 bg-dark">
+        <div class="calculator">
+          <div class="output">{{ displayValue }}</div>
+          <div class="keys">
+           <!-- Top Row -->
+          <button class="key light-gray" (click)="clear()">AC</button>
+          <button class="key light-gray" (click)="toggleSign()">+/-</button>
+          <button class="key light-gray" (click)="inputPercent()">%</button>
+          <button class="key orange" [ngClass]="{ active: operator === '÷' }" (click)="handleOperator('÷')">÷</button>
+
+          <!-- Row 2 -->
+          <button class="key dark" (click)="inputDigit('7')">7</button>
+          <button class="key dark" (click)="inputDigit('8')">8</button>
+          <button class="key dark" (click)="inputDigit('9')">9</button>
+          <button class="key orange" [ngClass]="{ active: operator === '×' }" (click)="handleOperator('×')">×</button>
+
+          <!-- Row 3 -->
+          <button class="key dark" (click)="inputDigit('4')">4</button>
+          <button class="key dark" (click)="inputDigit('5')">5</button>
+          <button class="key dark" (click)="inputDigit('6')">6</button>
+          <button class="key orange" [ngClass]="{ active: operator === '-' }" (click)="handleOperator('-')">-</button>
+
+          <!-- Row 4 -->
+          <button class="key dark" (click)="inputDigit('1')">1</button>
+          <button class="key dark" (click)="inputDigit('2')">2</button>
+          <button class="key dark" (click)="inputDigit('3')">3</button>
+          <button class="key orange" [ngClass]="{ active: operator === '+' }" (click)="handleOperator('+')">+</button>
+
+          <!-- Last Row -->
+          <button class="key zero dark" (click)="inputDigit('0')">0</button>
+          <button class="key dark" (click)="inputDecimal('.')">.</button>
+          <button class="key orange" (click)="calculate()">=</button>
+
+          </div>
+        </div>
+
         </div>
       </div>
     </div>
-  </div>
+
 
   <!-- Gallery Images -->
   <div class="row mt-4" *ngIf="showGallery">
@@ -42,4 +72,5 @@
       </div>
     </div>
   </div>
+
 </div>

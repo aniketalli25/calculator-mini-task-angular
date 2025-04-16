@@ -6,107 +6,115 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  display = '';
-  current = '';
+  displayValue = '0';
+  operator: string | null = null;
+  firstOperand: number | null = null;
+  waitingForSecondOperand = false;
   showGallery = false;
-  isCalculatorFocused = false;
 
-  buttons = ['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', 'C', '0', '=', '+' ];
+images = [
+  { src: 'assets/images/img-1.jfif' },
+  { src: 'assets/images/img-2.jfif' },
+  { src: 'assets/images/img-3.jfif' },
+];
 
-  images = [
-    { src: 'assets/images/img-1.jfif' },
-    { src: 'assets/images/img-2.jfif' },
-    { src: 'assets/images/img-3.jfif' },
-  ];
+imagePreviews: any[] = [];
+inputDigit(digit: string) {
+  if (this.waitingForSecondOperand) {
+    this.displayValue = digit;
+    this.waitingForSecondOperand = false;
+  } else {
+    this.displayValue =
+      this.displayValue === '0' ? digit : this.displayValue + digit;
+  }
+}
 
-  imagePreviews: any[] = [];
-
-  onCalcClick(val: string) {
-    if (!this.isCalculatorFocused) return;
-
-    if (/[\d+\-*/=C]/.test(val)) {
-      if (val === 'C') {
-        this.display = '';
-        this.current = '';
-      } else if (val === '=') {
-        try {
-          this.display = eval(this.current);
-          this.current = this.display;
-        } catch {
-          this.display = 'Error';
-        }
-      } else {
-        this.current += val;
-        this.display = this.current;
-      }
-    }
+inputDecimal(dot: string) {
+  if (this.waitingForSecondOperand) {
+    this.displayValue = '0.';
+    this.waitingForSecondOperand = false;
+    return;
   }
 
-  openGallery() {
-    this.showGallery = true;
+  if (!this.displayValue.includes(dot)) {
+    this.displayValue += dot;
+  }
+}
+
+clear() {
+  this.displayValue = '0';
+  this.firstOperand = null;
+  this.operator = null;
+  this.waitingForSecondOperand = false;
+}
+
+toggleSign() {
+  this.displayValue = String(parseFloat(this.displayValue) * -1);
+}
+
+inputPercent() {
+  const currentValue = parseFloat(this.displayValue);
+  if (currentValue === 0) return;
+  this.displayValue = String(currentValue / 100);
+}
+
+handleOperator(nextOperator: string) {
+  const inputValue = parseFloat(this.displayValue);
+
+  if (this.operator && this.waitingForSecondOperand) {
+    this.operator = nextOperator;
+    return;
   }
 
-  openImagePreview(img: any) {
-    const id = 'preview-' + Date.now();
-    this.imagePreviews.push({ id, src: img.src });
+  if (this.firstOperand == null) {
+    this.firstOperand = inputValue;
+  } else if (this.operator) {
+    const result = this.performCalculation(this.operator, this.firstOperand, inputValue);
+    this.displayValue = String(result);
+    this.firstOperand = result;
   }
 
-  closePreview(id: string) {
-    this.imagePreviews = this.imagePreviews.filter(p => p.id !== id);
+  this.operator = nextOperator;
+  this.waitingForSecondOperand = true;
+}
+
+performCalculation(operator: string, first: number, second: number): number {
+  switch (operator) {
+    case '+': return first + second;
+    case '-': return first - second;
+    case '×': return first * second;
+    case '÷': return second !== 0 ? first / second : 0;
+    default: return second;
   }
+}
 
-  addCaption(previewId: string) {
-    const container = document.getElementById(previewId + '-container')?.parentElement;
-    if (!container) return;
-
-    const caption = document.createElement('div');
-    caption.className = 'caption';
-    caption.contentEditable = 'true';
-    caption.innerText = 'Edit me';
-    caption.style.top = '50%';
-    caption.style.left = '50%';
-
-    let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
-
-    // Caption dragging functionality
-    caption.addEventListener('mousedown', (e: MouseEvent) => {
-      isDragging = true;
-      offsetX = e.offsetX;
-      offsetY = e.offsetY;
-      caption.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-      caption.style.cursor = 'move';
-    });
-
-    document.addEventListener('mousemove', (e: MouseEvent) => {
-      if (isDragging) {
-        caption.style.left = `${e.pageX - offsetX}px`;
-        caption.style.top = `${e.pageY - offsetY}px`;
-      }
-    });
-
-    // Double-click to edit caption
-    caption.addEventListener('dblclick', () => {
-      caption.contentEditable = caption.contentEditable === 'true' ? 'false' : 'true';
-    });
-
-    container.appendChild(caption);
+calculate() {
+  if (this.operator && this.firstOperand != null) {
+    const secondOperand = parseFloat(this.displayValue);
+    const result = this.performCalculation(this.operator, this.firstOperand, secondOperand);
+    this.displayValue = String(result);
+    this.firstOperand = null;
+    this.operator = null;
+    this.waitingForSecondOperand = false;
   }
+}
 
-  onModalShown() {
-    this.isCalculatorFocused = true;
-  }
+openGallery() {
+  this.showGallery = true;
+}
 
-  onModalHidden() {
-    this.isCalculatorFocused = false;
-  }
+openImagePreview(img: any) {
+  const previewId = 'preview-' + Math.random().toString(36).substr(2, 9);
+  this.imagePreviews.push({ id: previewId, src: img.src });
+}
 
+closePreview(previewId: string) {
+  this.imagePreviews = this.imagePreviews.filter(p => p.id !== previewId);
+}
 
-
+addCaption(previewId: string) {
+  alert('Caption added to image ID: ' + previewId);
+}
 
 }
+
